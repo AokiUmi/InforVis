@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Temperature Choropleth Map</title>
+    <script src="https://d3js.org/d3.v7.min.js"></script>
+    <script src="https://unpkg.com/topojson-client@3"></script> <!-- Only one topojson needed -->
+    <style>
+        body {
+            font-family: sans-serif;
+            text-align: center; /* Center all child elements */
+            margin: 0;
+            padding: 20px;
+        }
+        .button-group {
+            margin-bottom: 20px;
+        }
+        .button-group button {
+            margin: 0 5px;
+            padding: 5px 10px;
+            font-size: 14px;
+            cursor: pointer;
+        }
+        #map {
+            margin: 20px auto;
+            display: block; /* Important to make SVG center */
+            border: 1px solid #ccc;
+        }
+        #slider {
+            width: 500px;
+            margin-top: 20px;
+        }
+        #month-label {
+            margin-top: 10px;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <h2>Temperature Vislization</h2>
+
+    <div class="button-group">
+        <button onclick="changeAttribute('TAVG')">Average Temp (TAVG)</button>
+        <button onclick="changeAttribute('TMAX')">Max Temp (TMAX)</button>
+        <button onclick="changeAttribute('TMIN')">Min Temp (TMIN)</button>
+    </div>
+
+    <svg id="map" width="1300" height="900"></svg>
+
+    <input type="range" id="slider" min="0" max="23" step="1" value="0" oninput="updateMonth(this.value)">
+    <div id="month-label"></div>    
+    <h3>Scatterplot of TMIN vs TMAX</h3>
+    <svg id="scatter" width="1000" height="1000"></svg>
+        <div id="tooltip" style="
+        position: absolute;
+        visibility: hidden;
+        background: white;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+        padding: 8px;
+        font-size: 14px;
+        pointer-events: none;
+        box-shadow: 2px 2px 5px rgba(0,0,0,0.2);
+    "></div>
+    <script src="visualization.js"></script>
+</body>
+</html>
