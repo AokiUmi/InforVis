@@ -40,9 +40,9 @@
     <h2>Temperature Vislization</h2>
 
     <div class="button-group">
-        <button onclick="changeAttribute('TAVG')">Average Temp (TAVG)</button>
-        <button onclick="changeAttribute('TMAX')">Max Temp (TMAX)</button>
-        <button onclick="changeAttribute('TMIN')">Min Temp (TMIN)</button>
+        <label><input type="radio" name="attribute" value="TAVG" onclick="changeAttribute('TAVG')" checked> Average Temp (TAVG)</label>
+        <label><input type="radio" name="attribute" value="TMAX" onclick="changeAttribute('TMAX')"> Max Temp (TMAX)</label>
+        <label><input type="radio" name="attribute" value="TMIN" onclick="changeAttribute('TMIN')"> Min Temp (TMIN)</label>
     </div>
 
     <svg id="map" width="1300" height="900"></svg>

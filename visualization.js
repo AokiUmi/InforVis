@@ -140,8 +140,11 @@ Promise.all([
             if (abbr === "HE") {
                 return y + 20;
             }
-            if (abbr === "HI") {
+            else if (abbr === "HI") {
                 return y - 22;
+            }
+            else if (abbr === "GS") {
+                return y - 15;
             }
             return y;
         })
