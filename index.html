@@ -35,7 +35,6 @@
             font-weight: bold;
         }
         
-        /* 修改面板样式，添加可拖动支持 */
         #detail-panel {
             position: fixed;
             top: 50%;
@@ -111,7 +110,6 @@
             box-shadow: 2px 2px 5px rgba(0,0,0,0.2);
         }
         
-        /* 已选区域列表样式 */
         #selected-regions-list {
             margin: 10px 0;
             padding: 0;
@@ -157,14 +155,13 @@
     <h3>Scatterplot of TMIN vs TMAX</h3>
     <svg id="scatter" width="1000" height="1000"></svg>
     
-    <!-- 修改过的详细信息面板 -->
     <div id="detail-panel">
         <div class="panel-header">
             <h2 id="detail-title">Temperature Data</h2>
             <div class="close-btn" onclick="closeDetailPanel()">×</div>
         </div>
         
-        <div>已选区域:</div>
+        <div>Selected Region(s):</div>
         <ul id="selected-regions-list"></ul>
         
         <div class="attribute-selector">
