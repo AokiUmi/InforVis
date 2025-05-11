@@ -2,20 +2,20 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Temperature Choropleth Map</title>
+    <title>Temperature Visualization</title>
     <script src="https://d3js.org/d3.v7.min.js"></script>
-    <script src="https://unpkg.com/topojson-client@3"></script> <!-- Only one topojson needed -->
+    <script src="https://unpkg.com/topojson-client@3"></script>
     <style>
         body {
             font-family: sans-serif;
-            text-align: center; /* Center all child elements */
+            text-align: center;
             margin: 0;
             padding: 20px;
         }
         .button-group {
             margin-bottom: 20px;
         }
-        .button-group button {
+        .button-group button, .button-group label {
             margin: 0 5px;
             padding: 5px 10px;
             font-size: 14px;
@@ -23,7 +23,7 @@
         }
         #map {
             margin: 20px auto;
-            display: block; /* Important to make SVG center */
+            display: block;
             border: 1px solid #ccc;
         }
         #slider {
@@ -34,10 +34,114 @@
             margin-top: 10px;
             font-weight: bold;
         }
+        
+        /* 修改面板样式，添加可拖动支持 */
+        #detail-panel {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 800px;
+            height: 600px;
+            background: white;
+            border: 2px solid #333;
+            border-radius: 10px;
+            box-shadow: 0 0 20px rgba(0,0,0,0.5);
+            z-index: 1000;
+            display: none;
+            padding: 20px;
+            text-align: left;
+        }
+        
+        #detail-panel .panel-header {
+            padding: 10px;
+            cursor: move;
+            background: #f5f5f5;
+            border-radius: 8px 8px 0 0;
+            margin: -20px -20px 10px -20px;
+            border-bottom: 1px solid #ddd;
+        }
+        
+        #detail-panel .close-btn {
+            position: absolute;
+            right: 10px;
+            top: 10px;
+            font-size: 20px;
+            cursor: pointer;
+            width: 30px;
+            height: 30px;
+            text-align: center;
+            line-height: 30px;
+            border-radius: 50%;
+            background: #f5f5f5;
+        }
+        
+        #detail-panel .close-btn:hover {
+            background: #e0e0e0;
+        }
+        
+        #detail-chart {
+            width: 100%;
+            height: 400px;
+        }
+        
+        .selected-region {
+            stroke-width: 2px;
+            stroke: #ff9900 !important;
+            stroke-dasharray: 5;
+        }
+        
+        .attribute-selector {
+            margin: 10px 0;
+        }
+        
+        .attribute-selector label {
+            margin-right: 15px;
+        }
+        
+        #tooltip {
+            position: absolute;
+            visibility: hidden;
+            background: white;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            padding: 8px;
+            font-size: 14px;
+            pointer-events: none;
+            box-shadow: 2px 2px 5px rgba(0,0,0,0.2);
+        }
+        
+        /* 已选区域列表样式 */
+        #selected-regions-list {
+            margin: 10px 0;
+            padding: 0;
+            list-style-type: none;
+        }
+        
+        .region-item {
+            display: inline-block;
+            margin: 5px;
+            padding: 3px 8px;
+            background: #f0f0f0;
+            border-radius: 15px;
+            border: 1px solid #ddd;
+        }
+        
+        .region-item .remove-btn {
+            margin-left: 5px;
+            cursor: pointer;
+            color: #f44336;
+            font-weight: bold;
+        }
+        
+        .legend-item {
+            margin-top: 5px;
+            font-size: 12px;
+        }
     </style>
 </head>
 <body>
-    <h2>Temperature Vislization</h2>
+    <h2>Temperature Visualization</h2>
 
     <div class="button-group">
         <label><input type="radio" name="attribute" value="TAVG" onclick="changeAttribute('TAVG')" checked> Average Temp (TAVG)</label>
@@ -48,20 +152,32 @@
     <svg id="map" width="1300" height="900"></svg>
 
     <input type="range" id="slider" min="0" max="23" step="1" value="0" oninput="updateMonth(this.value)">
-    <div id="month-label"></div>    
+    <div id="month-label"></div>
+    
     <h3>Scatterplot of TMIN vs TMAX</h3>
     <svg id="scatter" width="1000" height="1000"></svg>
-        <div id="tooltip" style="
-        position: absolute;
-        visibility: hidden;
-        background: white;
-        border: 1px solid #ccc;
-        border-radius: 5px;
-        padding: 8px;
-        font-size: 14px;
-        pointer-events: none;
-        box-shadow: 2px 2px 5px rgba(0,0,0,0.2);
-    "></div>
+    
+    <!-- 修改过的详细信息面板 -->
+    <div id="detail-panel">
+        <div class="panel-header">
+            <h2 id="detail-title">Temperature Data</h2>
+            <div class="close-btn" onclick="closeDetailPanel()">×</div>
+        </div>
+        
+        <div>已选区域:</div>
+        <ul id="selected-regions-list"></ul>
+        
+        <div class="attribute-selector">
+            <label><input type="checkbox" value="TAVG" checked onchange="updateDetailChart()"> Average Temp (TAVG)</label>
+            <label><input type="checkbox" value="TMAX" checked onchange="updateDetailChart()"> Max Temp (TMAX)</label>
+            <label><input type="checkbox" value="TMIN" checked onchange="updateDetailChart()"> Min Temp (TMIN)</label>
+        </div>
+        
+        <svg id="detail-chart"></svg>
+    </div>
+    
+    <div id="tooltip"></div>
+    
     <script src="visualization.js"></script>
 </body>
 </html>
